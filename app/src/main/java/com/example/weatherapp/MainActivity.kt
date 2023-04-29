@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
             Log.i("Current Latitude", "$latitude")
             val longitude = mLastLocation.longitude
             Log.i("Current Longitude", "$longitude")
-
+            getLocationWeatherDetails()
         }
     }
 
@@ -97,6 +97,22 @@ class MainActivity : AppCompatActivity() {
             mLocationCallback,
             Looper.myLooper()
         )
+    }
+
+    private fun getLocationWeatherDetails(){
+        if(Constants.isNetworkAvailable(this)){
+            Toast.makeText(
+                this@MainActivity,
+                "You have connected to the internet",
+                Toast.LENGTH_SHORT
+            ).show()
+        }else{
+            Toast.makeText(
+                this@MainActivity,
+                "No internet connection available",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
     private fun showRationalDialogForPermissions(){
