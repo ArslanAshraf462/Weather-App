@@ -31,6 +31,8 @@ import retrofit2.Response
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -131,6 +133,7 @@ class MainActivity : AppCompatActivity() {
             showCustomProgressDialog()
 
             listCall.enqueue(object : Callback<WeatherResponse>{
+                @RequiresApi(Build.VERSION_CODES.N)
                 override fun onResponse(
                     call: Call<WeatherResponse>,
                     response: Response<WeatherResponse>
@@ -229,6 +232,16 @@ class MainActivity : AppCompatActivity() {
             binding!!.tvMain.text = weatherList.weather[i].main
             binding!!.tvMainDescription.text = weatherList.weather[i].description
             binding!!.tvTemp.text = weatherList.main.temp.toString() + getUnit(application.resources.configuration.locales.toString())
+
+            binding!!.tvHumidity.text = weatherList.main.humidity.toString() + " per cent"
+            binding!!.tvMin.text = weatherList.main.temp_min.toString() + " min"
+            binding!!.tvMax.text = weatherList.main.temp_max.toString() + " max"
+            binding!!.tvSpeed.text = weatherList.wind.speed.toString()
+            binding!!.tvName.text = weatherList.name
+            binding!!.tvCountry.text = weatherList.sys.country
+
+            binding!!.tvSunriseTime.text = unixTime(weatherList.sys.sunrise)
+            binding!!.tvSunsetTime.text = unixTime(weatherList.sys.sunset)
         }
     }
 
@@ -238,5 +251,12 @@ class MainActivity : AppCompatActivity() {
             value = "°F"
         }
         return value
+    }
+
+    private fun unixTime(timex: Long) : String?{
+        val date = Date(timex * 1000L)
+        val sdf = SimpleDateFormat("HH:mm", Locale.UK)
+        sdf.timeZone = TimeZone.getDefault()
+        return sdf.format(date)
     }
 }
